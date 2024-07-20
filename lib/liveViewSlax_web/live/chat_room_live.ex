@@ -71,7 +71,7 @@ defmodule LiveViewSlaxWeb.ChatRoomLive do
           Chat.get_first_room!()
       end
 
-      {:noreply, assign(socket, hide_topic?: false, room: room)}
+      {:noreply, assign(socket, hide_topic?: false, page_title: "#" <> room.name, room: room)}
   end
 
   def mount(_params, _session, socket) do
