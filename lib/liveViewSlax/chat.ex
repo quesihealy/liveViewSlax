@@ -4,6 +4,10 @@ defmodule LiveViewSlax.Chat do
 
   import Ecto.Query
 
+  def change_room(room, attrs \\ %{}) do
+    Room.changeset(room, attrs)
+  end
+
   def get_first_room! do
     Repo.one!(from r in Room, limit: 1, order_by: [asc: :name])
   end
