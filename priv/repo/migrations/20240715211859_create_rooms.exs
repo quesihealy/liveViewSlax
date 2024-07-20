@@ -3,7 +3,7 @@ defmodule LiveViewSlax.Repo.Migrations.CreateRooms do
 
   def change do
     create table(:rooms) do
-      add :name, :string, null: false
+      add :name, :string
       add :topic, :text
 
       timestamps(type: :utc_datetime)

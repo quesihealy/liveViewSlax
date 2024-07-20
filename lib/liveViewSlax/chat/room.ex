@@ -1,4 +1,4 @@
-defmodule LiveViewSlax.Chat.Rooms do
+defmodule LiveViewSlax.Chat.Room do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -10,8 +10,8 @@ defmodule LiveViewSlax.Chat.Rooms do
   end
 
   @doc false
-  def changeset(rooms, attrs) do
-    rooms
+  def changeset(room, attrs) do
+    room
     |> cast(attrs, [:name, :topic])
     |> validate_required([:name, :topic])
   end
