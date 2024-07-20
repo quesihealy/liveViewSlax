@@ -32,6 +32,8 @@ defmodule LiveViewSlaxWeb.ChatRoomLive do
   end
 
   def handle_event("toggle-topic", _params, socket) do
-    {:noreply, assign(socket, hide_topic?: !socket.assigns.hide_topic?)}
+    # Update is cleaner than assign
+    # {:noreply, assign(socket, hide_topic?: !socket.assigns.hide_topic?)}
+    {:noreply, update(socket, :hide_topic?, &(!&1))}
   end
 end
