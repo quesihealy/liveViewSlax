@@ -1,4 +1,4 @@
-defmodule LiveViewSlax.ChatRoomLive.Edit do
+defmodule LiveViewSlaxWeb.ChatRoomLive.Edit do
   use LiveViewSlaxWeb, :live_view
 
   alias LiveViewSlax.Chat
