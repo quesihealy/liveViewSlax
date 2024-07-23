@@ -19,6 +19,7 @@ defmodule LiveViewSlax.Chat.Room do
       message: "Can only contain lowercase letters, numbers and dashes"
     )
     |> validate_length(:topic, max: 200)
+    |> unsafe_validate_unique(:name, LiveViewSlax.Repo)
     |> unique_constraint(:name)
   end
 end
