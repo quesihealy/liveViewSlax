@@ -2,6 +2,7 @@ defmodule LiveViewSlaxWeb.ChatRoomLive do
   use LiveViewSlaxWeb, :live_view
 
   alias LiveViewSlax.Chat
+  alias LiveViewSlax.Chat.Message
   alias LiveViewSlax.Chat.Room
 
   def render(assigns) do
@@ -84,8 +85,43 @@ defmodule LiveViewSlaxWeb.ChatRoomLive do
         <% end %>
       </ul>
       </div>
+      <div class="flex flex-col flex-grow overflow-auto">
+        <.message :for={message <- @messages} message={message} />
+      </div>
     </div>
     """
+  end
+
+  def mount(_params, _session, socket) do
+    rooms = Chat.list_rooms()
+
+    {:ok, assign(socket, rooms: rooms)}
+  end
+
+  def handle_event("toggle-topic", _params, socket) do
+    # Update is cleaner than assign
+    # {:noreply, assign(socket, hide_topic?: !socket.assigns.hide_topic?)}
+    {:noreply, update(socket, :hide_topic?, &(!&1))}
+  end
+
+  def handle_params(params, _session, socket) do
+    room =
+      case Map.fetch(params, "id") do
+        {:ok, id} ->
+          Chat.get_room!(id)
+        :error ->
+          Chat.get_first_room!()
+      end
+
+    messages = Chat.list_messages_in_room(room)
+
+    {:noreply,
+      assign(socket,
+        hide_topic?: false,
+        messages: messages,
+        page_title: "#" <> room.name,
+        room: room
+      )}
   end
 
   attr :active, :boolean, required: true
@@ -108,27 +144,22 @@ defmodule LiveViewSlaxWeb.ChatRoomLive do
     """
   end
 
-  def handle_params(params, _session, socket) do
-    room =
-      case Map.fetch(params, "id") do
-        {:ok, id} ->
-          Chat.get_room!(id)
-        :error ->
-          Chat.get_first_room!()
-      end
+  attr :message, Message, required: true
 
-      {:noreply, assign(socket, hide_topic?: false, page_title: "#" <> room.name, room: room)}
-  end
+  defp message(assigns) do
+    ~H"""
+    <div class="relative flex px-4 py-3">
+      <div class="h-10 w-10 rounded flex-shrink-0 bg-slate-300"></div>
+      <div class="ml-2">
+        <div class="-mt-1">
+          <.link class="text-sm font-semibold hover:underline">
+            <span>User</span>
+          </.link>
+          <p class="text-sm"><%= @message.body %></p>
+        </div>
+      </div>
+    </div>
+    """
+   end
 
-  def mount(_params, _session, socket) do
-    rooms = Chat.list_rooms()
-
-    {:ok, assign(socket, rooms: rooms)}
-  end
-
-  def handle_event("toggle-topic", _params, socket) do
-    # Update is cleaner than assign
-    # {:noreply, assign(socket, hide_topic?: !socket.assigns.hide_topic?)}
-    {:noreply, update(socket, :hide_topic?, &(!&1))}
-  end
 end

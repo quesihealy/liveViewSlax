@@ -1,8 +1,16 @@
 defmodule LiveViewSlax.Chat do
+  alias LiveViewSlax.Chat.Message
   alias LiveViewSlax.Chat.Room
   alias LiveViewSlax.Repo
 
   import Ecto.Query
+
+  def list_messages_in_room(%Room{id: room_id}) do
+    Message
+    |> where([m], m.room_id == ^room_id)
+    |> order_by([m], asc: :inserted_at, asc: :id)
+    |> Repo.all()
+  end
 
   def change_room(room, attrs \\ %{}) do
     Room.changeset(room, attrs)
