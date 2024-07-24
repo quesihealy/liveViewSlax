@@ -1,11 +1,14 @@
 defmodule LiveViewSlax.Chat.Message do
+  alias LiveViewSlax.Chat.Room
+  alias LiveViewSlax.Accounts.User
+
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "messages" do
     field :body, :string
-    field :user_id, :id
-    field :room_id, :id
+    belongs_to :room, Room
+    belongs_to :user, User
 
     timestamps(type: :utc_datetime)
   end

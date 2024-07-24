@@ -6,9 +6,11 @@ defmodule LiveViewSlax.Chat do
   import Ecto.Query
 
   def list_messages_in_room(%Room{id: room_id}) do
+    IO.puts("room_id: #{room_id}")
     Message
     |> where([m], m.room_id == ^room_id)
     |> order_by([m], asc: :inserted_at, asc: :id)
+    |> preload(:user)
     |> Repo.all()
   end
 
