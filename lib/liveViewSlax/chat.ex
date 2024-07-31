@@ -5,6 +5,16 @@ defmodule LiveViewSlax.Chat do
 
   import Ecto.Query
 
+  def change_message(message, attrs \\ %{}) do
+    Message.changeset(message, attrs)
+  end
+
+  def create_message(room, attrs, user) do
+    %Message{room: room, user: user}
+    |> Message.changeset(attrs)
+    |> Repo.insert()
+  end
+
   def list_messages_in_room(%Room{id: room_id}) do
     IO.puts("room_id: #{room_id}")
     Message
