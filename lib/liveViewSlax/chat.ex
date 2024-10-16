@@ -1,10 +1,16 @@
 defmodule LiveViewSlax.Chat do
+  alias LiveViewSlax.Accounts.User
   alias LiveViewSlax.Chat.Message
   alias LiveViewSlax.Chat.Room
   alias LiveViewSlax.Repo
 
   import Ecto.Query
 
+  def delete_message_by_id(id, %User{id: user_id}) do
+    message = %Message{user_id: ^user_id} = Repo.get(Message, id)
+
+    Repo.delete(message)
+  end
   def change_message(message, attrs \\ %{}) do
     Message.changeset(message, attrs)
   end
